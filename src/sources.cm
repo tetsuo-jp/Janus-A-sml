@@ -1,0 +1,29 @@
+Group is
+
+#if defined (NEW_CM)
+  $/basis.cm
+  $/ml-yacc-lib.cm
+  $/smlnj-lib.cm
+#else
+  smlnj-lib.cm
+  ml-yacc-lib.cm
+#endif
+
+parse.sml
+driver.sml
+prabsyn.sml
+absyn.sml
+errormsg.sml
+janus.grm
+janus.lex
+env.sml
+eval.sml
+prompt.sml
+prompt.lex
+pretty.sml
+trans.sml
+invert.sml
+symbol.sig
+symbol.sml
+table.sig
+table.sml

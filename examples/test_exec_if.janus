@@ -1,0 +1,6 @@
+n
+
+procedure test_exec_if
+  if 1
+  then n += 42
+  fi 1

@@ -1,0 +1,6 @@
+i z1 alphas[2]
+
+procedure main
+  i+=1
+  alphas[i] ^= 3
+  z1 ^= alphas[i]

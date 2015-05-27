@@ -1,0 +1,9 @@
+* Lecture version -- 24 November 2006
+
+- The notation is slightly different from the original letter about Janus.
+  exclusive-or ! ==> ^
+  not-equal    # ==> !=
+  m_xor        != ==> ^=
+  swap         : ==> <=>
+- smf operator (*/) is added.
+  This operator is necessary to write a schroedinger wave simulation program.

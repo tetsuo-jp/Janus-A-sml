@@ -1,0 +1,19 @@
+sigma[1] tmp_stack[5]
+type[7] para[7]
+
+procedure test_eval_con
+  type[0]+=n_stmt_start	//procedure main
+  type[1]+=n_aop_start
+  type[2]+=n_aop
+  type[3]+=n_con
+  type[4]+=n_con	//42
+  type[5]+=n_aop_end
+  type[6]+=n_stmt_end	//procedure main
+
+  para[0]+=6	//n_stmt_start main
+  para[1]+=4	//n_aop_start
+  para[2]+=n_aop_plus
+  para[3]+=0	//(lvalue: n)
+  para[4]+=42	//n_con
+  para[5]+= -4	//n_aop_end
+  para[6]+= -6	//n_stmt_end main

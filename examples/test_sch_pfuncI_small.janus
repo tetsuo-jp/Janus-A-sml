@@ -1,0 +1,58 @@
+epsilon
+alphas[4] psiR[4] psiI[4]
+i j z1 z2 z3 z4
+
+procedure pfuncI
+   z1      ^= alphas[i]
+   z2      ^= psiR[i]
+   z3      ^= z1 */ z2
+   psiI[i] -= z3
+   z3      ^= z1 */ z2
+   z2      ^= psiR[i]
+   z1      ^= alphas[i]
+   // psiI[0]=~442302
+
+   z1      ^= i+1
+   z2      ^= z1&3
+   z3      ^= psiR[z2]
+   z4      ^= epsilon */ z3
+   psiI[i] += z4
+   // epsilon=203667001
+   // psiI[0]=~153542
+   // z1=1
+   // z2=1
+   // z3=3044772
+   // z4=288760
+
+   z4      ^= epsilon */ z3
+   z3      ^= psiR[z2]
+   z2      ^= z1&3
+   z1      ^= i+1
+
+   z1      ^= i-1
+   z2      ^= z1&3
+   z3      ^= psiR[z2]
+   z4      ^= epsilon */ z3
+   psiI[i] += z4
+   z4      ^= epsilon */ z3
+   z3      ^= psiR[z2]
+   z2      ^= z1&3
+   z1      ^= i-1
+   // psiR[0]=447119
+
+procedure init
+    epsilon+=203667001
+    alphas[00]+=458243442
+    alphas[01]+=456664951
+    alphas[02]+=455111319
+    alphas[03]+=453582544
+
+    psiR[0]+=2072809
+    psiR[1]+=3044772
+    psiR[2]+=4418237
+    psiR[3]+=6333469
+
+    psiI[0]+=0
+    psiI[1]+=0
+    psiI[2]+=0
+    psiI[3]+=0

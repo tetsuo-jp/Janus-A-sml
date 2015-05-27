@@ -1,0 +1,6 @@
+i
+
+procedure main
+    from  i=0
+    loop  i+=1
+    until i=5

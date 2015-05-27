@@ -1,0 +1,5 @@
+n m
+
+procedure main
+  m+=42
+  n+=m

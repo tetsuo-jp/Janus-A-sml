@@ -1,0 +1,37 @@
+sigma[2] tmp_stack[5]
+type[16] para[16]
+
+procedure test_eval_binop
+  type[0]+=n_stmt_start	//procedure main
+  type[1]+=n_aop_start
+  type[2]+=n_aop
+  type[3]+=n_con
+  type[4]+=n_con	//42
+  type[5]+=n_aop_end
+  type[6]+=n_aop_start
+  type[7]+=n_aop
+  type[8]+=n_con
+  type[9]+=n_bop_start	//n_plus
+  type[10]+=n_bop
+  type[11]+=n_var
+  type[12]+=n_con	//3
+  type[13]+=n_bop_end	//n_plus
+  type[14]+=n_aop_end
+  type[15]+=n_stmt_end	//procedure main
+
+  para[0]+=15	//n_stmt_start main
+  para[1]+=4	//n_aop_start
+  para[2]+=n_aop_plus
+  para[3]+=1	//(lvalue: m)
+  para[4]+=42	//n_con
+  para[5]+= -4	//n_aop_end
+  para[6]+=8	//n_aop_start
+  para[7]+=n_aop_plus
+  para[8]+=0	//(lvalue: n)
+  para[9]+=4	//n_bop_start
+  para[10]+=n_plus	//n_bop
+  para[11]+=1	//(lvalue: m)
+  para[12]+=3	//n_con
+  para[13]+= -4	//n_bop_end
+  para[14]+= -8	//n_aop_end
+  para[15]+= -15	//n_stmt_end main

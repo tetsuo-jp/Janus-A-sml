@@ -1,0 +1,53 @@
+sigma[4] tmp_stack[5]
+type[24] para[24]
+
+procedure test_array
+  type[0]+=n_stmt_start	//procedure main
+  type[1]+=n_aop_start
+  type[2]+=n_aop
+  type[3]+=n_con
+  type[4]+=n_con	//1
+  type[5]+=n_aop_end
+  type[6]+=n_aop_start
+  type[7]+=n_aop
+  type[8]+=n_bop_start	//(lvalue: alphas)
+  type[9]+=n_bop
+  type[10]+=n_con
+  type[11]+=n_var
+  type[12]+=n_bop_end	//(lvalue: alphas)
+  type[13]+=n_con	//3
+  type[14]+=n_aop_end
+  type[15]+=n_aop_start
+  type[16]+=n_aop
+  type[17]+=n_con
+  type[18]+=n_arr_start	//(lvalue: alphas)
+  type[19]+=n_arr
+  type[20]+=n_var
+  type[21]+=n_arr_end	//(lvalue: alphas)
+  type[22]+=n_aop_end
+  type[23]+=n_stmt_end	//procedure main
+
+  para[0]+=23	//n_stmt_start main
+  para[1]+=4	//n_aop_start
+  para[2]+=n_aop_plus
+  para[3]+=0	//(lvalue: i)
+  para[4]+=1	//n_con
+  para[5]+= -4	//n_aop_end
+  para[6]+=8	//n_aop_start
+  para[7]+=n_aop_xor
+  para[8]+=4	//n_bop_start
+  para[9]+=n_plus
+  para[10]+=2	//(lvalue: alphas)
+  para[11]+=0	//(lvalue: i)
+  para[12]+= -4	//n_bop_end
+  para[13]+=3	//n_con
+  para[14]+= -8	//n_aop_end
+  para[15]+=7	//n_aop_start
+  para[16]+=n_aop_xor
+  para[17]+=1	//(lvalue: z1)
+  para[18]+=3	//n_arr_start
+  para[19]+=2	//(lvalue: alphas)
+  para[20]+=0	//(lvalue: i)
+  para[21]+= -3	//n_arr_end
+  para[22]+= -7	//n_aop_end
+  para[23]+= -23	//n_stmt_end main

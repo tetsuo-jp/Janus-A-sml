@@ -1,0 +1,357 @@
+// Self-Interpreter
+
+// Environment
+// sigma[391] // for schroedinger eq.
+sigma[3] // for Fibonacci
+// sigma[4] // for test_array
+// sigma[20]
+
+// Encoded program
+pc
+// para[26] type[26] // for small programs
+para[77] type[77] // for Fibonacci
+// para[532] type[532] // for schroedinger
+// para[219] type[219] // for schroedinger_small
+// para[62] type[62]
+
+// Temporaries
+op arg1 arg2 tmp result
+op_tmp arg1_tmp arg2_tmp result_tmp
+
+// Temporary stack
+tmp_lhs
+tmp_stack[15] //for Fibonacci
+// tmp_stack[100] 
+tmp_sp
+
+// Types
+n_con
+n_var
+n_bop_start n_bop n_bop_end
+n_neg_start n_neg n_neg_end
+n_arr_start n_arr n_arr_end
+n_aop_start n_aop n_aop_end
+n_if_start n_if_end n_fi_start n_fi_end
+n_from_start n_from_end n_until_start n_until_end
+n_call n_uncall n_skip n_stmt_start n_stmt_end
+n_swap_start n_swap_end
+
+// Programs
+n_aop_plus n_aop_minus n_aop_xor
+n_plus n_minus n_xor n_times n_div n_mod n_smf n_and n_or n_andand n_oror n_lt n_gt n_eq n_neq n_le n_ge
+
+procedure sint_init
+  // Types
+  n_con          ^=100
+  n_var          ^=101
+  n_bop_start    ^=102
+  n_bop          ^=103
+  n_bop_end      ^=104
+  n_neg_start    ^=105
+  n_neg          ^=106
+  n_neg_end      ^=107
+  n_arr_start    ^=108
+  n_arr          ^=109
+  n_arr_end      ^=110
+  n_aop_start    ^=111
+  n_aop          ^=112
+  n_aop_end      ^=113
+  n_if_start     ^=114
+  n_if_end       ^=115
+  n_fi_start     ^=116
+  n_fi_end       ^=117
+  n_from_start   ^=118
+  n_from_end     ^=119
+  n_until_start  ^=120
+  n_until_end    ^=121
+  n_call         ^=122
+  n_uncall       ^=123
+  n_skip         ^=124
+  n_stmt_start   ^=125
+  n_stmt_end     ^=126
+  n_swap_start   ^=127
+  n_swap_end     ^=128
+
+  // Parameters
+  n_aop_plus     ^=200
+  n_aop_minus    ^=201
+  n_aop_xor      ^=202
+
+  n_plus       ^=303
+  n_minus      ^=304
+  n_xor        ^=305
+  n_times      ^=306
+  n_div        ^=307
+  n_mod        ^=308
+  n_smf        ^=309
+  n_and        ^=310
+  n_or         ^=311
+  n_andand     ^=312
+  n_oror       ^=313
+  n_lt         ^=314
+  n_gt         ^=315
+  n_eq         ^=316
+  n_neq        ^=317
+  n_le         ^=318
+  n_ge         ^=319
+  
+  pc ^= 0 // Program counter
+  tmp_sp ^= -1 // stack pointer
+
+// Evaluator of expressions
+procedure eval
+  if type[pc] = n_con
+  then result ^= para[pc]
+  else if type[pc] = n_var
+  then result ^= sigma[para[pc]]
+  else if type[pc] = n_bop_start
+  then call eval_bop
+       call next
+       pc-=1
+  else if type[pc] = n_arr_start
+  then call eval_arr
+       call next
+       pc-=1
+  else error eval
+  fi type[pc] = n_arr_end
+  fi type[pc] = n_bop_end
+  fi type[pc] = n_var
+  fi type[pc] = n_con
+  pc+=1
+
+procedure eval_bop
+  call alloc_tmp
+  call eval_bop_args
+  if op = n_plus        then tmp ^= arg1 + arg2
+  else if op = n_minus  then tmp ^= arg1 - arg2
+  else if op = n_smf    then tmp ^= arg1 */ arg2
+  else if op = n_and    then tmp ^= arg1 & arg2
+  else if op = n_xor    then tmp ^= arg1 ^ arg2
+  else if op = n_times  then tmp ^= arg1 * arg2
+  else if op = n_div    then tmp ^= arg1 / arg2
+  else if op = n_mod    then tmp ^= arg1 % arg2
+  else if op = n_or     then tmp ^= arg1 | arg2
+  else if op = n_andand then tmp ^= arg1 && arg2
+  else if op = n_oror   then tmp ^= arg1 || arg2
+  else if op = n_lt     then tmp ^= arg1 < arg2
+  else if op = n_gt     then tmp ^= arg1 > arg2
+  else if op = n_eq     then tmp ^= arg1 = arg2
+  else if op = n_neq    then tmp ^= arg1 != arg2
+  else if op = n_le     then tmp ^= arg1 <= arg2
+  else if op = n_ge     then tmp ^= arg1 >= arg2
+  else if 1 fi 0
+  fi op = n_ge
+  fi op = n_le
+  fi op = n_neq
+  fi op = n_eq
+  fi op = n_gt
+  fi op = n_lt
+  fi op = n_oror
+  fi op = n_andand
+  fi op = n_or
+  fi op = n_mod
+  fi op = n_div
+  fi op = n_times
+  fi op = n_xor
+  fi op = n_and
+  fi op = n_smf
+  fi op = n_minus
+  fi op = n_plus
+  uncall eval_bop_args
+  result <=> tmp
+  uncall alloc_tmp
+
+procedure eval_bop_args
+  pc += 1
+  call alloc_tmp   // refuge operator
+  tmp ^= para[pc]  // refuge operator
+  pc += 1
+  call eval
+  if arg1 then error eval_bop_args1 fi arg1 // for testing
+  arg1 <=> result
+  call eval
+  if arg2 then error eval_bop_args2 fi arg2 // for testing
+  arg2 <=> result
+  op <=> tmp       // restore operator
+  uncall alloc_tmp // restore operator
+
+procedure eval_arr
+  pc+=1
+  call alloc_tmp
+  tmp_lhs <=> tmp
+  tmp_lhs ^= para[pc] // name of array
+  pc += 1
+  call eval
+  tmp_lhs += result   // index of array
+  call alloc_tmp
+  tmp ^= sigma[tmp_lhs] // value of array
+  tmp_lhs -= result   // index of array
+  uncall eval
+  pc -= 1
+  tmp_lhs ^= para[pc] // name of array
+  if result then error eval_arr fi result
+  result <=> tmp
+  uncall alloc_tmp
+  if tmp_lhs then error eval_arr fi tmp_lhs
+  tmp_lhs <=> tmp
+  uncall alloc_tmp
+  pc-=1
+
+// Executor of statements
+procedure exec
+  from  type[pc] = n_stmt_start
+  do    pc += 1
+  loop  call exec1
+  until type[pc] = n_stmt_end
+  pc += 1
+
+procedure exec1
+  if type[pc] = n_aop_start  then call exec_assop
+  else if type[pc] = n_from_start then call exec_from
+  else if type[pc] = n_if_start        then call exec_if
+  else if type[pc] = n_call       then call exec_call
+  else if type[pc] = n_uncall     then call exec_uncall
+  else if type[pc] = n_skip
+  else if type[pc] = n_swap_start then call exec_swap
+  else error in_exec1
+  fi type[pc] = n_swap_end
+  fi type[pc] = n_skip
+  fi type[pc] = n_uncall
+  fi type[pc] = n_call
+  fi type[pc] = n_fi_end
+  fi type[pc] = n_until_end
+  fi type[pc] = n_aop_end
+
+procedure exec_if
+  pc += 1
+  call eval
+  if result
+  then uncall eval
+       pc -= 1
+       call next // to then
+       call exec
+       call next // to fi
+       pc += 1
+       call eval
+  else uncall eval
+       pc -= 1
+       call next // to then
+       call next // to else
+       call exec
+       pc += 1
+       call eval
+  fi result
+  uncall eval
+  pc -= 1
+  call next // to end of statement
+  pc -= 1
+
+procedure exec_from
+  pc += 1
+  call eval
+  from  result
+  do    uncall eval
+        pc -= 1
+        call next // to do
+        call exec
+        call next // to until
+        pc += 1
+        call eval
+  loop  uncall eval
+        pc -= 1
+        uncall next // to loop
+        call exec
+        uncall next // to loop
+        uncall next // to do
+        uncall next // to from
+        pc += 1
+        call eval
+  until result
+  uncall eval
+  pc -= 1
+  call next // to end of statement
+  pc -= 1
+
+// n_aop_start => n_aop_end
+procedure exec_assop
+  call exec_assop_args
+  call exec_assop_upd
+  uncall exec_assop_args
+  call next // to end of statement
+  pc -= 1
+
+procedure exec_assop_args
+  pc += 1
+  call alloc_tmp   // refuge assinment operator
+  tmp ^= para[pc]  // refuge assinment operator
+  pc += 1
+  call eval // evaluation of lhs
+  if tmp_lhs then error eval_bop_args3 fi tmp_lhs // for testing
+  tmp_lhs <=> result
+  call eval // evaluation of rhs
+  if op then error eval_bop_args4 fi op // for testing
+  op <=> tmp       // restore operator
+  uncall alloc_tmp // restore operator
+
+procedure exec_assop_upd
+  if op = n_aop_plus
+  then sigma[tmp_lhs] += result
+  else if op = n_aop_minus
+  then sigma[tmp_lhs] -= result
+  else if op = n_aop_xor
+  then sigma[tmp_lhs] ^= result
+  else error exec_assop_upd
+  fi op = n_aop_xor
+  fi op = n_aop_minus
+  fi op = n_aop_plus
+
+procedure exec_call
+  call exec_call_pc_swap
+  call exec
+  uncall next
+  uncall exec_call_pc_swap
+
+procedure exec_call_pc_swap
+  tmp ^= para[pc]
+  pc <=> tmp
+  call alloc_tmp
+
+procedure exec_uncall
+  call exec_call_pc_swap
+  call next
+  uncall exec
+  uncall exec_call_pc_swap
+
+procedure exec_swap
+  pc += 1
+  call eval
+  result_tmp <=> result
+  op_tmp <=> op
+  arg1_tmp <=> arg1
+  arg2_tmp <=> arg2
+  call eval
+  sigma[result_tmp] <=> sigma[result]
+  uncall eval
+  arg2_tmp <=> arg2
+  arg1_tmp <=> arg1
+  op_tmp <=> op
+  result_tmp <=> result
+  uncall eval
+
+  pc -= 1
+  call next
+  pc -= 1
+
+// Starting on ``start'' and end on the next line to ``finish''
+procedure next
+  call alloc_tmp
+  tmp+=para[pc]
+  pc+=tmp
+  tmp+=para[pc]
+  if tmp then error in_next fi tmp // assertion
+  uncall alloc_tmp
+  pc+=1
+
+procedure alloc_tmp
+  tmp_sp += 1
+  tmp <=> tmp_stack[tmp_sp]

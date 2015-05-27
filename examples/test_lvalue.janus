@@ -1,0 +1,4 @@
+i x[2]
+
+procedure main
+  x[i] += 3

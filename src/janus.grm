@@ -1,0 +1,165 @@
+structure A = Absyn
+structure S = Symbol
+%%
+%term
+    EOF
+  | PROCEDURE | ID of string
+
+  (* Statements *)
+  | M_PLUS | M_MINUS | M_XOR | M_RROTATE | M_LROTATE
+  | SWAP
+  | IF | THEN | ELSE | FI
+  | FROM | DO | LOOP | UNTIL
+  | CALL | UNCALL | SKIP
+
+  (* Expressions *)
+  | INT of LargeWord.word
+  | U_NOT | U_MINUS
+  | PLUS | MINUS | XOR | TIMES | DIVIDE | REMAINDER | SMF | AND | OR | ANDAND | OROR
+  | LT | GT | EQ | NEQ | LE | GE
+
+  (* Extensions *)
+  | RSHIFT | LSHIFT | RROTATE | LROTATE
+  | READ | WRITE
+  | LPAREN | RPAREN | LBRACK | RBRACK
+  | ERROR
+
+%nonterm program of A.program
+       | vardecs of A.lvalue list
+       | vardec of A.lvalue
+       | procs of A.proc list
+       | proc of A.proc
+       | stms of A.stm list
+       | stm of A.stm
+       | ifstm of A.stm
+       | op_then of A.stm list option
+       | op_else of A.stm list option
+       | dostm of A.stm
+       | op_do of A.stm list option
+       | op_loop of A.stm list option
+       | callstm of A.stm
+       | readstm of A.stm
+       | writestm of A.stm
+       | lvalstm of A.stm
+       | modstm of A.modoper * A.exp
+       | swapstm of A.lvalue
+       | exp of A.exp
+       | minexp of A.exp
+       | lvalue of A.lvalue
+
+%pos int
+%verbose
+%start program
+%eop EOF
+%noshift EOF
+
+%name JANUS
+
+%keyword PROCEDURE IF THEN ELSE FI FROM DO LOOP UNTIL CALL UNCALL READ WRITE
+
+%prefer THEN ELSE LPAREN
+
+%value ID ("bogus")
+%value INT (0w1)
+
+(* The upper is lower precedence *)
+(* right = shift  *)
+(* left  = reduce *)
+%left OR OROR XOR
+%left AND ANDAND
+%nonassoc GT LT EQ NEQ GE LE
+%left PLUS MINUS
+%left TIMES DIVIDE REMAINDER SMF
+%left RSHIFT LSHIFT RROTATE LROTATE
+%left U_NOT U_MINUS
+%%
+
+program: vardecs procs (A.Program(vardecs,procs))
+
+vardecs: vardec vardecs (vardec::vardecs)
+       | (* empty *)    ([])
+
+vardec : ID (A.Lvalue{name=S.symbol(ID),sub=A.IntExp(0w1),pos=IDleft,valarray=ref NONE})
+       | ID LBRACK exp RBRACK (A.Lvalue{name=S.symbol(ID),sub=exp,pos=IDleft,valarray=ref NONE})
+
+procs  : proc procs (proc::procs)
+       | (* empty *) ([])
+
+proc   : PROCEDURE ID stms (A.Procedure{name=S.symbol(ID),stms=stms,pos=PROCEDUREleft})
+
+stms   : stm stms (stm::stms)
+       | (* empty *)    ([])
+
+stm    : ifstm (ifstm)
+       | dostm (dostm)
+       | callstm (callstm)
+       | readstm (readstm)
+       | writestm (writestm)
+       | lvalstm (lvalstm)
+       | ERROR ID (A.ErrorStm {str=ID,pos=ERRORleft})
+
+ifstm  : IF exp op_then op_else FI exp (A.IfStm{test1=exp1,then'=op_then,else'=op_else,test2=exp2,pos=IFleft})
+
+op_then: THEN stms (SOME stms)
+       | (* empty *) (NONE)
+
+op_else: ELSE stms (SOME stms)
+       | (* empty *) (NONE)
+
+dostm  : FROM exp op_do op_loop UNTIL exp (A.DoStm{test1=exp1,do'=op_do,loop=op_loop,test2=exp2,pos=FROMleft})
+
+op_do  : DO   stms (SOME stms)
+       | (* empty *) (NONE)
+
+op_loop: LOOP stms (SOME stms)
+       | (* empty *) (NONE)
+
+callstm: CALL   ID (A.CallStm{name=S.symbol(ID),pos=CALLleft,proc=ref NONE})
+       | UNCALL ID (A.UncallStm{name=S.symbol(ID),pos=UNCALLleft,proc=ref NONE})
+
+readstm: READ lvalue (A.ReadStm{lvalue=lvalue,pos=READleft})
+
+writestm: WRITE lvalue (A.WriteStm{lvalue=lvalue,pos=WRITEleft})
+
+lvalstm: lvalue modstm (let val (modoper,exp) = modstm
+                        in A.ModStm{lvalue=lvalue,modoper=modoper,exp=exp,pos=lvalueleft}
+                        end)
+       | lvalue swapstm (A.SwapStm{lvalue1=lvalue,lvalue2=swapstm,pos=lvalueleft})
+
+modstm : M_PLUS  exp (A.M_PlusOp,exp)
+       | M_MINUS exp (A.M_MinusOp,exp)
+       | M_XOR   exp (A.M_XorOp,exp)
+
+swapstm: SWAP lvalue (lvalue)
+
+exp    : minexp (minexp)
+       | exp PLUS   exp (A.OpExp{left=exp1,oper=A.PlusOp,right=exp2,pos=PLUSleft})
+       | exp MINUS  exp (A.OpExp{left=exp1,oper=A.MinusOp,right=exp2,pos=MINUSleft})
+       | exp XOR    exp (A.OpExp{left=exp1,oper=A.XorOp,right=exp2,pos=XORleft})
+       | exp LT     exp (A.OpExp{left=exp1,oper=A.LtOp,right=exp2,pos=LTleft})
+       | exp GT     exp (A.OpExp{left=exp1,oper=A.GtOp,right=exp2,pos=GTleft})
+       | exp AND    exp (A.OpExp{left=exp1,oper=A.AndOp,right=exp2,pos=ANDleft})
+       | exp ANDAND exp (A.OpExp{left=exp1,oper=A.AndandOp,right=exp2,pos=ANDANDleft})
+       | exp OR     exp (A.OpExp{left=exp1,oper=A.OrOp,right=exp2,pos=ORleft})
+       | exp OROR   exp (A.OpExp{left=exp1,oper=A.OrorOp,right=exp2,pos=ORORleft})
+       | exp EQ     exp (A.OpExp{left=exp1,oper=A.EqOp,right=exp2,pos=EQleft})
+       | exp NEQ    exp (A.OpExp{left=exp1,oper=A.NeqOp,right=exp2,pos=NEQleft})
+       | exp LE     exp (A.OpExp{left=exp1,oper=A.LeOp,right=exp2,pos=LEleft})
+       | exp GE     exp (A.OpExp{left=exp1,oper=A.GeOp,right=exp2,pos=GEleft})
+       | exp TIMES  exp (A.OpExp{left=exp1,oper=A.TimesOp,right=exp2,pos=TIMESleft})
+       | exp DIVIDE exp (A.OpExp{left=exp1,oper=A.DivideOp,right=exp2,pos=DIVIDEleft})
+       | exp REMAINDER exp (A.OpExp{left=exp1,oper=A.RemainderOp,right=exp2,pos=REMAINDERleft})
+       | exp RSHIFT exp (A.OpExp{left=exp1,oper=A.RShiftOp,right=exp2,pos=RSHIFTleft})
+       | exp LSHIFT exp (A.OpExp{left=exp1,oper=A.LShiftOp,right=exp2,pos=LSHIFTleft})
+       | exp RROTATE exp (A.OpExp{left=exp1,oper=A.RRotateOp,right=exp2,pos=RROTATEleft})
+       | exp LROTATE exp (A.OpExp{left=exp1,oper=A.LRotateOp,right=exp2,pos=LROTATEleft})
+       | exp SMF exp    (A.OpExp{left=exp1,oper=A.SmfOp,right=exp2,pos=SMFleft})
+
+minexp : LPAREN exp RPAREN (exp)
+       | MINUS exp %prec U_MINUS (A.OpExp{left=A.IntExp(0w0),oper=A.MinusOp,right=exp,pos=MINUSleft})
+       | U_NOT exp (A.OpExp{left=A.IntExp(0w0-0w1),oper=A.XorOp,right=exp,pos=U_NOTleft})
+       | lvalue (A.VarExp lvalue)
+       | INT (A.IntExp(INT))
+
+lvalue : ID (A.Lvalue{name=S.symbol(ID),sub=A.IntExp(0w0),pos=IDleft,valarray=ref NONE})
+       | ID LBRACK exp RBRACK (A.Lvalue{name=S.symbol(ID),sub=exp,pos=IDleft,valarray=ref NONE})

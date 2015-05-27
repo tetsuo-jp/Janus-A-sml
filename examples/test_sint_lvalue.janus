@@ -1,0 +1,27 @@
+sigma[3] tmp_stack[5]
+type[11] para[11]
+
+procedure test_lvalue
+  type[0]+=n_stmt_start	//procedure main
+  type[1]+=n_aop_start
+  type[2]+=n_aop
+  type[3]+=n_bop_start	//(lvalue: x)
+  type[4]+=n_bop
+  type[5]+=n_con
+  type[6]+=n_var
+  type[7]+=n_bop_end	//(lvalue: x)
+  type[8]+=n_con	//3
+  type[9]+=n_aop_end
+  type[10]+=n_stmt_end	//procedure main
+
+  para[0]+=10	//n_stmt_start main
+  para[1]+=8	//n_aop_start
+  para[2]+=n_aop_plus
+  para[3]+=4	//n_bop_start
+  para[4]+=n_plus
+  para[5]+=1	//(lvalue: x)
+  para[6]+=0	//(lvalue: i)
+  para[7]+= -4	//n_bop_end
+  para[8]+=3	//n_con
+  para[9]+= -8	//n_aop_end
+  para[10]+= -10	//n_stmt_end main

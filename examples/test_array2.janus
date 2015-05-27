@@ -1,0 +1,8 @@
+i z1 z2 z3 z4 psiR[2] psiI[2] epsilon
+
+procedure main
+    z1      ^= 1
+    z2      ^= z1 & 3
+    z3      ^= psiR[z2]
+    z4      ^= epsilon */ z3
+    psiI[i] += z4

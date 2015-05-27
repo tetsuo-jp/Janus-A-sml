@@ -1,0 +1,57 @@
+sigma[1] tmp_stack[5]
+type[26] para[26]
+
+procedure test_exec_loop
+  type[0]+=n_stmt_start	//procedure main
+  type[1]+=n_from_start
+  type[2]+=n_bop_start	//n_eq
+  type[3]+=n_bop
+  type[4]+=n_var
+  type[5]+=n_con	//0
+  type[6]+=n_bop_end	//n_eq
+  type[7]+=n_from_end
+  type[8]+=n_stmt_start
+  type[9]+=n_skip
+  type[10]+=n_stmt_end
+  type[11]+=n_stmt_start
+  type[12]+=n_aop_start
+  type[13]+=n_aop
+  type[14]+=n_con
+  type[15]+=n_con	//1
+  type[16]+=n_aop_end
+  type[17]+=n_stmt_end
+  type[18]+=n_until_start
+  type[19]+=n_bop_start	//n_eq
+  type[20]+=n_bop
+  type[21]+=n_var
+  type[22]+=n_con	//5
+  type[23]+=n_bop_end	//n_eq
+  type[24]+=n_until_end
+  type[25]+=n_stmt_end	//procedure main
+
+  para[0]+=25	//n_stmt_start main
+  para[1]+=6	//n_from_start
+  para[2]+=4	//n_bop_start
+  para[3]+=n_eq	//n_bop
+  para[4]+=0	//(lvalue: i)
+  para[5]+=0	//n_con
+  para[6]+= -4	//n_bop_end
+  para[7]+= -6	//n_from_end
+  para[8]+=2	//n_stmt_start
+  para[9]+=0	//n_skip
+  para[10]+= -2	//n_stmt_end
+  para[11]+=6	//n_stmt_start
+  para[12]+=4	//n_aop_start
+  para[13]+=n_aop_plus
+  para[14]+=0	//(lvalue: i)
+  para[15]+=1	//n_con
+  para[16]+= -4	//n_aop_end
+  para[17]+= -6	//n_stmt_end
+  para[18]+=6	//n_until_start
+  para[19]+=4	//n_bop_start
+  para[20]+=n_eq	//n_bop
+  para[21]+=0	//(lvalue: i)
+  para[22]+=5	//n_con
+  para[23]+= -4	//n_bop_end
+  para[24]+= -6	//n_until_end
+  para[25]+= -25	//n_stmt_end main

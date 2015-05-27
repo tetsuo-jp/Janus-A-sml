@@ -1,0 +1,83 @@
+// Schroedinger Wave Equation simulation program.
+// from Frank thesis
+
+epsilon
+alphas[128] psiR[128] psiI[128]
+i j z1 z2 z3 z4
+
+procedure schroed3
+    from  j=0
+    loop  call schstep
+          j+=1
+    until j=3
+    j-=3
+
+procedure schstep
+    from  i=0
+    loop  call pfuncR
+          i+=1
+    until i=128
+    i-=128
+    from  i=0
+    loop  call pfuncI
+          i+=1
+    until i=128
+    i-=128
+
+procedure pfuncR
+    z1      ^= alphas[i]
+    z2      ^= psiI[i]
+    z3      ^= z1 */ z2
+    psiR[i] += z3
+    z3      ^= z1 */ z2
+    z2      ^= psiI[i]
+    z1      ^= alphas[i]
+
+    z1      ^= i+1
+    z2      ^= z1&127
+    z3      ^= psiI[z2]
+    z4      ^= epsilon */ z3
+    psiR[i] -= z4
+    z4      ^= epsilon */ z3
+    z3      ^= psiI[z2]
+    z2      ^= z1&127
+    z1      ^= i+1
+
+    z1      ^= i-1
+    z2      ^= z1&127
+    z3      ^= psiI[z2]
+    z4      ^= epsilon */ z3
+    psiR[i] -= z4
+    z4      ^= epsilon */ z3
+    z3      ^= psiI[z2]
+    z2      ^= z1&127
+    z1      ^= i-1
+
+procedure pfuncI
+    z1      ^= alphas[i]
+    z2      ^= psiR[i]
+    z3      ^= z1 */ z2
+    psiI[i] -= z3
+    z3      ^= z1 */ z2
+    z2      ^= psiR[i]
+    z1      ^= alphas[i]
+
+    z1      ^= i+1
+    z2      ^= z1&127
+    z3      ^= psiR[z2]
+    z4      ^= epsilon */ z3
+    psiI[i] += z4
+    z4      ^= epsilon */ z3
+    z3      ^= psiR[z2]
+    z2      ^= z1&127
+    z1      ^= i+1
+
+   z1      ^= i-1
+   z2      ^= z1&127
+   z3      ^= psiR[z2]
+   z4      ^= epsilon */ z3
+   psiI[i] += z4
+   z4      ^= epsilon */ z3
+   z3      ^= psiR[z2]
+   z2      ^= z1&127
+   z1      ^= i-1

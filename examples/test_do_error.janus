@@ -1,0 +1,13 @@
+b
+
+// Error is raised when you call and uncall main.
+procedure main
+  from 0 until 0
+
+// The second evaluation of test 1 raised error in fwd computation.
+procedure main_fwd
+  from 1 until 0
+
+// The second evaluation of test 1 raised error in bwd computation.
+procedure main_bwd
+  from 0 until 1
