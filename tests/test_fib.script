@@ -1,0 +1,3 @@
+../examples/fib.janus
+call main_fwd
+quit

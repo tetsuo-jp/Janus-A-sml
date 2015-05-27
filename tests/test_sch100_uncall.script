@@ -1,0 +1,6 @@
+../examples/test_sch100.janus
+add "../examples/test_sch.janus"
+add "../examples/test_sch_init.janus"
+call test_sch_init
+uncall schroed100
+quit

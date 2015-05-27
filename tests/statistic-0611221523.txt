@@ -1,0 +1,10 @@
+* sch on Int
+call   schroed3       0.187  0.171  0.172
+call   schroed1000   20.578 20.547 20.718
+uncall schroed1000   20.828 20.750 20.890
+
+* sch on Sint on Int
+call   schroed1     
+call   schroed3     
+call   schroed10     36.468 36.219 36.218
+call   schroed100   

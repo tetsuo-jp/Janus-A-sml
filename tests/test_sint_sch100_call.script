@@ -1,0 +1,8 @@
+../examples/test_sint_sch100.janus
+add "../examples/test_sint_sch_init.janus"
+add "../examples/sint.janus"
+call sint_init
+call test_sch100
+call test_sint_sch_init
+call exec
+quit

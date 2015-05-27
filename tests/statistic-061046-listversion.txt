@@ -1,0 +1,45 @@
+* sch on Int
+call   schroed1       0.047  0.031  0.047
+uncall schroed1       0.031  0.031  0.046
+call   schroed10      0.438  0.437  0.406
+uncall schroed10      0.453  0.422  0.406
+call   schroed100     4.172  4.063  4.093
+uncall schroed100     4.281  4.266  4.328
+call   schroed316    12.0   11.969 11.984
+uncall schroed316    12.032 12.046 12.016
+call   schroed1000   39.0   40.75  40.687
+uncall schroed1000   40.016 40.937 41.266
+call   schroed10000 422.781
+uncall schroed10000 380.875
+
+* sch^(-1) on Int
+call   schroed1      0.046  0.047   0.031
+uncall schroed1      0.046  0.047   0.046
+call   schroed10     0.407  0.407   0.406
+uncall schroed10     0.391  0.406   0.407
+call   schroed100    4.094  4.109   4.156
+uncall schroed100    4.125  4.172   4.125
+call   schroed1000 (117.969) 40.157  39.453 37.813 37.672 38.093
+uncall schroed1000  42.172 (221.015) 40.25  37.906 37.891 (87.328)
+
+* sch on Sint on Int
+call   schroed1      15.156  17.579  15.297 15.344
+uncall schroed1      18.406  15.656  15.297
+call   schroed3      43.172  43.437  44.047
+uncall schroed3      43.407  43.281  43.125
+call   schroed10    150.89  152.016 152.031
+uncall schroed10    150.625 152.187 152.063
+call   schroed100 (19008.219)
+uncall schroed100
+
+* sch^(-1) on Sint on Int
+call   schroed3      43.453 43.25  43.297 43.391
+uncall schroed3      43.25  43.235 43.234 43.625
+
+* sch on Sint^(-1) on Int
+call   schroed3      43.235
+uncall schroed3      43.422
+
+* sch^(-1) on Sint^(-1) on Int
+call   schroed3      43.375  43.328  43.531
+uncall schroed3      43.484 (73.844) 43.422

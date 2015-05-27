@@ -1,0 +1,52 @@
+================================================================
+Intel Core Duo T2400 (1.83 GHz), SML version 110.0.7, Windows XP 
+================================================================
+
+* sch on Int
+call   schroed3       0.187  0.156  0.157
+call   schroed10      0.250  0.266  0.265
+uncall schroed10      0.312  0.266  0.250
+call   schroed100     1.515  1.547  1.500
+uncall schroed100     1.593  1.532  1.547
+call   schroed1000   13.796 13.797 13.797
+uncall schroed1000   14.093 14.016 14.000
+
+* sch on Sint on Int
+call   schroed1       2.406    2.406    2.391
+uncall schroed1       2.219
+call   schroed3       6.906    6.844    6.843
+call   schroed10     22.359   22.593   22.531
+call   schroed100  3m42.421 3m42.391 3m42.546
+
+
+
+=============================================================
+Intel Pentium 4 (CPU 3.00GHz), SML version 110.0.7, GNU/Linux
+                                              (app-1.diku.dk)
+=============================================================
+
+* sch on Int
+call   schroed1         0.040    0.032    0.032
+uncall schroed1         0.032    0.020    0.028
+call   schroed3         0.048    0.040    0.044
+uncall schroed3         0.032    0.040    0.052
+call   schroed10        0.124    0.120    0.120
+uncall schroed10        0.120    0.116    0.112
+call   schroed100       1.000    1.004    1.004
+uncall schroed100       0.996    0.988    1.000
+call   schroed1000      9.877    9.837    9.889
+uncall schroed1000      9.989    9.937    9.865
+call   schroed10000  1m38.029 1m38.153 1m38.138
+uncall schroed10000  1m38.918 1m38.798 1m38.830
+call   schroed100000 16m22.153 16m24.702 16m20.117
+uncall schroed100000 16m26.050 16m26.226 16m26.286
+call   schroed1M     166m34.789 166m15.003 165m54.814
+uncall schroed1M     160m14.665 160m7.952 160m40.214
+
+* sch on Sint on Int
+call   schroed1           1.672
+call   schroed3           4.812
+call   schroed10         15.732
+call   schroed100      2m39.482
+call   schroed1000    25m49.495 25m53.925 25m56.144
+call   schroed10000  261m50.834 254m34.023 253m16.394
